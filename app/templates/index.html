@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
   <title>Bird Species Prediction App</title>
   <!-- CSS  -->
-  <link href="./static/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{{ url_for('static', filename='css/materialize.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 
 <body>
-  <nav style="background-color: #9d03fc" class="lighten-1"  role="navigation" style="height: 100px">
+  <nav style="background-color: #9d03fc" class="lighten-1" role="navigation">
     <div class="nav-wrapper container">
       <a id="logo-container" class="brand-logo center"><h5>Bird Species Prediction App</h5></a>
       <div style="margin-left: 800px">
@@ -18,43 +18,53 @@
     </div>
   </nav>
 
-
   <div class="section no-pad-bot" id="index-banner">
     <div class="container">
       <div class="row">
-        <form action='/' method="post" class="col s12" enctype="multipart/form-data">
+        <form action="/" method="post" class="col s12" enctype="multipart/form-data">
           <div class="row">
-
             <div class="input-field col s5" style="margin-left: 20px; margin-top: 50px">
-              <div class = "row">
-
-                  <div class="row">
-                    <label for="first_name"><b>Upload Image</b></label><br>
-                    <div class = "file-field input-field">
-                      <div class = "btn" style="background-color: #9d03fc">
-                        <span>Browse</span>
-                        <input type = "file" name="image_upload" id="image_upload" />
-                      </div>
-                      <div class = "file-path-wrapper">
-                        <input class = "file-path validate" type = "text" placeholder = "Upload Image" name="image_name" id="image_name" />
-                      </div>
+              <div class="row">
+                <div class="row">
+                  <label for="image_upload"><b>Upload Image</b></label><br>
+                  <div class="file-field input-field">
+                    <div class="btn" style="background-color: #9d03fc">
+                      <span>Browse</span>
+                      <input type="file" name="image_upload" id="image_upload" required/>
+                    </div>
+                    <div class="file-path-wrapper">
+                      <input class="file-path validate" type="text" placeholder="Upload Image" id="image_name"/>
                     </div>
                   </div>
+                </div>
 
-                  <div class="row center" style="margin-top: 50px">
-                    <button id="submit" type="submit" class="btn-large" style="background-color: #9d03fc">Predict</button>
-                  </div>
+                <div class="row center" style="margin-top: 50px">
+                  <button id="submit" type="submit" class="btn-large" style="background-color: #9d03fc">Predict</button>
+                </div>
 
-                  <div>
-                    <h5>{{ pred }}</h5>
-                  </div>
+                <!-- Display Prediction Result -->
+                <div class="row center" style="margin-top: 20px">
+                  {% if pred %}
+                    <h5>Prediction: {{ pred }}</h5>
+                  {% endif %}
+                </div>
+
+                <!-- Display Error Message -->
+                <div class="row center" style="margin-top: 20px; color: red;">
+                  {% if error %}
+                    <h5>Error: {{ error }}</h5>
+                  {% endif %}
+                </div>
 
               </div>
             </div>
 
+            <!-- Display Uploaded Image -->
             <div class="input-field col s3">
               <div style="text-align: center; padding-top: 50px; margin-left: 100px">
-                <img src="{{ url_for('static',filename=full_filename) }}" width="500" height="300">
+                {% if full_filename %}
+                  <img src="{{ url_for('static', filename=full_filename) }}" width="500" height="300" alt="Uploaded Image">
+                {% endif %}
               </div>
             </div>
           </div>
@@ -63,16 +73,13 @@
     </div>
   </div>
 
-  </div>
-  </div>
-
   <!--  Scripts-->
-  <script src="./static/js/materialize.js"></script>
+  <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
   <script type="text/javascript">
     document.getElementById('image_upload').onchange = function () {
-        document.getElementById('image_name').value = this.value.slice(12,100);
+        document.getElementById('image_name').value = this.value.split('\\').pop();
     };
   </script>
 
-  </body>
+</body>
 </html>
